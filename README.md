@@ -143,4 +143,4 @@ Usage: <class_name>.update(<_id>, <dictionary>)
 
 ## Authors:
    * __Hagos Mehari__ <[Hagos2022](https://github.com/Hagos2022)>
-   * __Nabil Mouhamech__ <[Ogeben1](https://github.com/Ogeben1)>
+   * __Nabil Mouhamech__ <[](https://github.com/)>
