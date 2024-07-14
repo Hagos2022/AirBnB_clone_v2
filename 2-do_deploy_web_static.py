@@ -1,39 +1,30 @@
 #!/usr/bin/python3
-""" Fabfile to distribute an archive to a web server """
+"""
+Fabric script based on the file 1-pack_web_static.py that distributes an
+archive to the web servers
+"""
 
-from fabric.api import *       # we need to import put, run, env
-from datetime import datetime
+from fabric.api import put, run, env
 from os.path import exists
-
-env.hosts = ['100.26.49.247', '54.173.27.192']
+env.hosts = ['54.89.109.87', '100.25.190.21']
 
 
 def do_deploy(archive_path):
-    """ distributes an archive to the web servers """
-
+    """distributes an archive to the web servers"""
     if exists(archive_path) is False:
-        return False  # Returns False if the file at archive_path doesnt exist
-    filename = archive_path.split('/')[-1]
-    # filename is <web_static_20230503193956.tgz>
-    no_tgz = '/data/web_static/releases/' + "{}".format(filename.split('.')[0])
-    tmp = "/tmp/" + filename
-
+        return False
     try:
-        put(archive_path, "/tmp/")   # Upload archive to /tmp/ in web-server
-        run("mkdir -p {}/".format(no_tgz))
-        # Uncompress the archive to the folder /data/web_static/releases/
-        # <archive filename without extension> on the web server
-        run("tar -xzf {} -C {}/".format(tmp, no_tgz))
-        run("rm {}".format(tmp))
-        run("mv {}/web_static/* {}/".format(no_tgz, no_tgz))
-        run("rm -rf {}/web_static".format(no_tgz))
-        # Delete the archive from the web server
-        run("rm -rf /data/web_static/current")
-        # Delete the symbolic link /data/web_static/current from the web server
-        run("ln -s {}/ /data/web_static/current".format(no_tgz))
-        # Create a new the symbolic link /data/web_static/current on the
-        # web server, linked to the new version of your code
-        # (/data/web_static/releases/<archive filename without extension>)
+        file_n = archive_path.split("/")[-1]
+        no_ext = file_n.split(".")[0]
+        path = "/data/web_static/releases/"
+        put(archive_path, '/tmp/')
+        run('mkdir -p {}{}/'.format(path, no_ext))
+        run('tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
+        run('rm /tmp/{}'.format(file_n))
+        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
+        run('rm -rf {}{}/web_static'.format(path, no_ext))
+        run('rm -rf /data/web_static/current')
+        run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
-    except Exception:
+    except:
         return False
