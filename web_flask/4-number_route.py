@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Starts a Flask web application.
+
 The application listens on 0.0.0.0, port 5000.
 Routes:
     /: Displays 'Hello HBNB!'.
@@ -9,6 +10,7 @@ Routes:
     /number/<n>: Displays 'n is a number' only if <n> is an integer.
 """
 from flask import Flask
+from flask import abort
 
 app = Flask(__name__)
 
@@ -27,7 +29,10 @@ def hbnb():
 
 @app.route("/c/<text>", strict_slashes=False)
 def c(text):
-    """Display "C" followed by the value of the text variable."""
+    """Displays 'C' followed by the value of <text>.
+
+    Replaces any underscores in <text> with slashes.
+    """
     text = text.replace("_", " ")
     return "C {}".format(text)
 
@@ -35,14 +40,17 @@ def c(text):
 @app.route("/python", strict_slashes=False)
 @app.route("/python/<text>", strict_slashes=False)
 def python(text="is cool"):
-    """Display "Python" followed by the value of the text variable."""
+    """Displays 'Python' followed by the value of <text>.
+
+    Replaces any underscores in <text> with slashes.
+    """
     text = text.replace("_", " ")
-    return "C {}".format(text)
+    return "Python {}".format(text)
 
 
 @app.route("/number/<int:n>", strict_slashes=False)
 def number(n):
-    """Display “n is a number” only if n is an integer."""
+    """Displays 'n is a number' only if n is an integer."""
     return "{} is a number".format(n)
 
 
